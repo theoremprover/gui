@@ -1,18 +1,24 @@
-{-# LANGUAGE OverloadedStrings,TemplateHaskell #-}
+{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE TemplateHaskell #-}
 
 module Main where
 
 import Control.Lens
+import Data.Maybe
 import Data.Text (Text)
 import Monomer
 import TextShow
 
-data AppModel = AppModel {
-	_clickCount :: Int
-	} deriving (Eq, Show)
+--import qualified Monomer.Lens as L
 
-data AppEvent = AppInit | AppIncrease
-	deriving (Eq, Show)
+newtype AppModel = AppModel {
+  _clickCount :: Int
+} deriving (Eq, Show)
+
+data AppEvent
+  = AppInit
+  | AppIncrease
+  deriving (Eq, Show)
 
 makeLenses 'AppModel
 
@@ -29,13 +35,14 @@ buildUI wenv model = vstack [
 
 handleEvent :: WidgetEnv AppModel AppEvent -> WidgetNode AppModel AppEvent -> AppModel -> AppEvent -> [AppEventResponse AppModel AppEvent]
 handleEvent wenv node model evt = case evt of
-	AppInit -> []
-	AppIncrease -> [ Model (model & clickCount +~ 1) ]
+  AppInit -> []
+  AppIncrease -> [Model (model & clickCount +~ 1)]
 
 main :: IO ()
 main = do
 	startApp (AppModel 0) handleEvent buildUI [
-		appWindowTitle "Hello World",
+		appWindowTitle "Hello world",
 		appTheme darkTheme,
 		appFontDef "Regular" "./assets/fonts/Roboto-Regular.ttf",
-		appInitEvent AppInit ]
+		appInitEvent AppInit
+		]
