@@ -49,7 +49,7 @@ handleEvent wenv node model evt = case evt of
 
 main :: IO ()
 main = do
-	startApp (AppModel 0) handleEvent buildUI [
+	startApp (AppModel intialTree) handleEvent buildUI [
 		appWindowTitle "Hello world",
 		appTheme darkTheme,
 		appFontDef "Regular" "./assets/fonts/Roboto-Regular.ttf",
