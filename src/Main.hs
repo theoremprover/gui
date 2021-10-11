@@ -8,17 +8,26 @@ import Data.Maybe
 import Data.Text (Text)
 import Monomer
 import TextShow
+import Data.Tree
 
 --import qualified Monomer.Lens as L
 
+type MyTree = Tree String
+type TreeLoc = [Int]
+
 newtype AppModel = AppModel {
-  _clickCount :: Int
+  myTree :: MyTree
 } deriving (Eq, Show)
 
-data AppEvent
-  = AppInit
-  | AppIncrease
+data AppEvent = AppInitialModel | AppAddTree TreeLoc MyTree | AppRemoveTree TreeLoc
   deriving (Eq, Show)
+
+initialTree = Node "root" [
+	Node "Node 1" [],
+	Node "Node 2" [
+		Node "Node 2a" [],
+		Node "Node 2b" [] ]
+	]
 
 makeLenses 'AppModel
 
@@ -35,8 +44,8 @@ buildUI wenv model = vstack [
 
 handleEvent :: WidgetEnv AppModel AppEvent -> WidgetNode AppModel AppEvent -> AppModel -> AppEvent -> [AppEventResponse AppModel AppEvent]
 handleEvent wenv node model evt = case evt of
-  AppInit -> []
-  AppIncrease -> [Model (model & clickCount +~ 1)]
+  AppInitialModel -> []
+  AppAddTree loc tree -> [ Model (model & clickCount +~ 1) ]
 
 main :: IO ()
 main = do

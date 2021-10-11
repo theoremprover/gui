@@ -19,6 +19,7 @@ dependencies:
   - monomer
   - text
   - text-show
+  - containers
 
 executables:
   gui-exe:
