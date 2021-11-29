@@ -26,5 +26,6 @@ executables:
     source-dirs:      src
     main:             Main.hs
     ghc-options:
+    - -fno-warn-tabs
     - -fwarn-incomplete-patterns
     - -threaded
