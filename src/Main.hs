@@ -12,22 +12,13 @@ import Data.Tree
 
 --import qualified Monomer.Lens as L
 
-type MyTree = Tree String
-type TreeLoc = [Int]
-
 newtype AppModel = AppModel {
-  myTree :: MyTree
+  _clickCount :: Int
 } deriving (Eq, Show)
+initialModel = AppModel 1
 
-data AppEvent = AppInitialModel | AppAddTree TreeLoc MyTree | AppRemoveTree TreeLoc
+data AppEvent = AppInitialModel | AppIncrease
   deriving (Eq, Show)
-
-initialTree = Node "root" [
-	Node "Node 1" [],
-	Node "Node 2" [
-		Node "Node 2a" [],
-		Node "Node 2b" [] ]
-	]
 
 makeLenses 'AppModel
 
@@ -45,13 +36,13 @@ buildUI wenv model = vstack [
 handleEvent :: WidgetEnv AppModel AppEvent -> WidgetNode AppModel AppEvent -> AppModel -> AppEvent -> [AppEventResponse AppModel AppEvent]
 handleEvent wenv node model evt = case evt of
   AppInitialModel -> []
-  AppAddTree loc tree -> [ Model (model & clickCount +~ 1) ]
+  AppIncrease -> [ Model (model & clickCount +~ 1) ]
 
 main :: IO ()
 main = do
-	startApp (AppModel intialTree) handleEvent buildUI [
+	startApp initialModel handleEvent buildUI [
 		appWindowTitle "Hello world",
 		appTheme darkTheme,
 		appFontDef "Regular" "./assets/fonts/Roboto-Regular.ttf",
-		appInitEvent AppInit
+		appInitEvent AppInitialModel
 		]
