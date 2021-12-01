@@ -9,10 +9,19 @@ import TextShow
 
 --import qualified Monomer.Lens as L
 
+import Data.Tree
+
 newtype AppModel = AppModel {
-  _clickCount :: Int
+	_myTree :: Tree String
 } deriving (Eq, Show)
-initialModel = AppModel 1
+initialTree :: Tree String
+initialTree = Node "root" [
+	Node "node 1" [Node "node 1a" [], Node "node 1b" []],
+	Node "node 2" []
+	]
+initialModel = AppModel initialTree
+
+
 
 --data AppEvent = AppInitialModel | AppIncrease
 data AppEvent = AppIncrease
