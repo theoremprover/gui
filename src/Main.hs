@@ -10,6 +10,7 @@ import TextShow
 --import qualified Monomer.Lens as L
 
 import Data.Tree
+import Data.Tree.Lens
 
 newtype AppModel = AppModel {
 	_myTree :: Tree String
@@ -20,6 +21,21 @@ initialTree = Node "root" [
 	Node "node 2" []
 	]
 initialModel = AppModel initialTree
+
+data TreeCfg = TreeCfg {
+	fontSize :: Int
+	} deriving (Eq,Show)
+instance Default TreeCfg where
+	def = TreeCfg {
+		fontSize = 10
+		}
+
+data (Eq a,Show a) => TreeState a = TreeState {
+	_treeS :: Tree a
+	} deriving (Eq,Show)
+
+makeLenses ''TreeState
+
 
 tree :: WidgetNode s e
 tree = tree_ def
@@ -38,8 +54,6 @@ makeTree cfg state = widget where
 --data AppEvent = AppInitialModel | AppIncrease
 data AppEvent = AppIncrease
   deriving (Eq, Show)
-
-makeLenses 'AppModel
 
 buildUI :: WidgetEnv AppModel AppEvent -> AppModel -> WidgetNode AppModel AppEvent
 buildUI wenv model = vstack [
