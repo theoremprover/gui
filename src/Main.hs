@@ -21,7 +21,19 @@ initialTree = Node "root" [
 	]
 initialModel = AppModel initialTree
 
+tree :: WidgetNode s e
+tree = tree_ def
 
+tree_ :: [CanvasCfg] -> Tree a -> WidgetNode (Tree a) e
+tree_ configs initialtree = defaultWidgetNode "tree" newWidget where
+	config = mconcat configs
+	newWidget = makeTree config initialtree
+
+makeTree :: CanvasCfg -> TreeState -> Widget s e
+makeTree cfg state = widget where
+	widget = createSingle state def {
+	...
+	}
 
 --data AppEvent = AppInitialModel | AppIncrease
 data AppEvent = AppIncrease
