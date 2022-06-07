@@ -13,6 +13,18 @@ import Data.Tree
 import Data.Tree.Lens
 
 newtype AppModel = AppModel {
+	_clickCount :: Int
+} deriving (Eq, Show)
+
+initialModel = AppModel 0
+
+data AppEvent = AppInit | AppIncrease
+	deriving (Eq, Show)
+
+makeLenses 'AppModel
+
+{-
+newtype AppModel = AppModel {
 	_myTree :: Tree String
 } deriving (Eq, Show)
 initialTree :: Tree String
@@ -53,7 +65,8 @@ makeTree cfg state = widget where
 
 --data AppEvent = AppInitialModel | AppIncrease
 data AppEvent = AppIncrease
-  deriving (Eq, Show)
+	deriving (Eq, Show)
+-}
 
 buildUI :: WidgetEnv AppModel AppEvent -> AppModel -> WidgetNode AppModel AppEvent
 buildUI wenv model = vstack [
@@ -68,7 +81,7 @@ buildUI wenv model = vstack [
 
 handleEvent :: WidgetEnv AppModel AppEvent -> WidgetNode AppModel AppEvent -> AppModel -> AppEvent -> [AppEventResponse AppModel AppEvent]
 handleEvent wenv node model evt = case evt of
---  AppInitialModel -> []
+  AppInit     -> []
   AppIncrease -> [ Model (model & clickCount +~ 1) ]
 
 main :: IO ()
@@ -76,6 +89,6 @@ main = do
 	startApp initialModel handleEvent buildUI [
 		appWindowTitle "Hello world",
 		appTheme darkTheme,
-		appFontDef "Regular" "./assets/fonts/Roboto-Regular.ttf"
---		appInitEvent AppInitialModel
+		appFontDef "Regular" "./assets/fonts/Roboto-Regular.ttf",
+		appInitEvent AppInit
 		]
